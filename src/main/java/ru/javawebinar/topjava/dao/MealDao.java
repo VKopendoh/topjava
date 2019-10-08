@@ -5,13 +5,11 @@ import ru.javawebinar.topjava.model.Meal;
 import java.util.List;
 
 public interface MealDao {
-    void saveOrUpdate(Meal meal);
+    Meal saveOrUpdate(Meal meal);
 
-    void delete(int id);
+    void delete(Integer id);
 
-    Meal getById(int id);
+    Meal getById(Integer id);
 
     List<Meal> getAll();
-
-    int generateId();
 }

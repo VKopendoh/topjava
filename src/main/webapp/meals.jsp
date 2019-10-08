@@ -11,13 +11,17 @@
             color: red
         }
 
-        .black {
-            color: black
+        .green {
+            color: green;
         }
     </style>
 </head>
-<body>
 
+<body>
+<h3><a href="index.html">Home</a></h3>
+<hr>
+<h2>Meals</h2>
+<br>
 <table border="1" cellpadding="2" cellspacing="0">
     <tr>
         <th>Описание</th>
@@ -26,11 +30,7 @@
         <th>Действие</th>
     </tr>
     <c:forEach var="mealTo" items="${mealsWithExceed}">
-        <c:set var="exceed" value="black"/>
-        <c:if test="${mealTo.excess}">
-            <c:set var="exceed" value="red"/>
-        </c:if>
-
+        <c:set var="exceed" value="${mealTo.excess ? 'red' : 'green'}"/>
         <tr class="${exceed}">
             <td> ${mealTo.description} </td>
             <td> ${mealTo.calories} </td>
@@ -51,10 +51,9 @@
                                value="${not empty meal.calories ? meal.calories:200}"/><br><br>
     Дата и время: <input type="datetime-local"
                          name="dateTime"
-                         value="${not empty meal.dateTime ? meal.dateTime:'2015-10-09T21:44:27.123'}"/><br><br>
+                         value="${not empty meal.dateTime ? meal.dateTime:'2015-10-09T21:44'}"/><br><br>
     <input type="hidden" name="id" value="${meal.id}">
     <input type="submit" value="Сохранить">
 </form>
-
 </body>
 </html>
