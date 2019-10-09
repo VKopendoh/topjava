@@ -23,7 +23,7 @@ public class Meal {
     }
 
     public Meal(LocalDateTime dateTime, String description, int calories) {
-        this(UUID.randomUUID().hashCode(), dateTime, description, calories);
+        this(null, dateTime, description, calories);
     }
 
     public LocalDateTime getDateTime() {
@@ -59,14 +59,11 @@ public class Meal {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Meal meal = (Meal) o;
-        return calories == meal.calories &&
-                Objects.equals(id, meal.id) &&
-                Objects.equals(dateTime, meal.dateTime) &&
-                Objects.equals(description, meal.description);
+        return id != null && id.equals(meal.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, dateTime, description, calories);
+        return 13;
     }
 }

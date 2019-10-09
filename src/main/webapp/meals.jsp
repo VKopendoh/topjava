@@ -6,15 +6,7 @@
 
 <head>
     <title>Title</title>
-    <style>
-        .red {
-            color: red
-        }
-
-        .green {
-            color: green;
-        }
-    </style>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
@@ -34,7 +26,7 @@
         <tr class="${exceed}">
             <td> ${mealTo.description} </td>
             <td> ${mealTo.calories} </td>
-            <td> ${f:formatLocalDateTime(mealTo.dateTime, 'dd.MM.yyyy HH:mm')} </td>
+            <td> ${f:formatLocalDateTime(mealTo.dateTime)} </td>
             <td><a href="meals?action=delete&id=${mealTo.id}"> Удалить </a> |
                 <a href="meals?action=update&id=${mealTo.id}"> Редактировать </a></td>
         </tr>

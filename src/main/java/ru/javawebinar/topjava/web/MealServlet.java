@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -24,6 +25,7 @@ public class MealServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         meals = MealsUtil.generate(new MealInMemoryDao());
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("");
     }
 
     @Override
