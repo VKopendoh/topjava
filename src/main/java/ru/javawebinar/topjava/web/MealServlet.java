@@ -25,13 +25,11 @@ public class MealServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         meals = MealsUtil.generate(new MealInMemoryDao());
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("");
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         log.debug("IN doPOST");
         request.setCharacterEncoding("UTF-8");
         String desc = request.getParameter("description");
@@ -59,8 +57,7 @@ public class MealServlet extends HttpServlet {
         String action = request.getParameter("action");
         if (action == null) {
             log.debug("REDIRECT TO LIST");
-            request.setAttribute("mealsWithExceed", getMealsWithExceed());
-            request.getRequestDispatcher("/meals.jsp").forward(request, response);
+            genMealsWithExceedAndDispatchToView(request,response);
             return;
         }
         switch (action) {
@@ -72,16 +69,16 @@ public class MealServlet extends HttpServlet {
                 log.debug("===> UPDATE: " + request.getParameter("id"));
                 request.setAttribute("meal", meals.getById(Integer
                         .parseInt(request.getParameter("id"))));
-                request.setAttribute("mealsWithExceed", getMealsWithExceed());
-                request.getRequestDispatcher("/meals.jsp").forward(request, response);
+                genMealsWithExceedAndDispatchToView(request,response);
                 break;
         }
-
-
     }
 
-    private List<MealTo> getMealsWithExceed() {
-        return MealsUtil.getFiltered(meals.getAll(), LocalDateTime.MIN.toLocalTime(),
+    private void genMealsWithExceedAndDispatchToView(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        List<MealTo> mealsWithExceed = MealsUtil.getFiltered(meals.getAll(), LocalDateTime.MIN.toLocalTime(),
                 LocalDateTime.MAX.toLocalTime(), MealsUtil.DEFAULT_CALORIES_PER_DAY);
+        request.setAttribute("mealsWithExceed", mealsWithExceed);
+        request.getRequestDispatcher("/meals.jsp").forward(request, response);
     }
 }

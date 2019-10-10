@@ -4,30 +4,21 @@ import ru.javawebinar.topjava.model.Meal;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MealInMemoryDao implements MealDao {
-
+    private final AtomicInteger id = new AtomicInteger();
     private Map<Integer, Meal> meals = new ConcurrentHashMap<>();
 
     @Override
     public Meal saveOrUpdate(Meal meal) {
-        Lock lock = new ReentrantLock();
         if (meal.getId() == null) {
-            meal.setId(generateId());
+            meal.setId(id.incrementAndGet());
         }
-        Meal mealInDao = getById(meal.getId());
-        lock.lock();
-        if (mealInDao == null) {
             meals.put(meal.getId(), meal);
-        } else {
-            meals.put(mealInDao.getId(), meal);
-        }
-        lock.unlock();
+
         return meal;
     }
 
@@ -44,9 +35,5 @@ public class MealInMemoryDao implements MealDao {
     @Override
     public List<Meal> getAll() {
         return new CopyOnWriteArrayList<>(meals.values());
-    }
-
-    private Integer generateId() {
-        return UUID.randomUUID().hashCode();
     }
 }
