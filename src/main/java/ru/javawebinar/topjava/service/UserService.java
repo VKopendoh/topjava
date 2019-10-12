@@ -21,6 +21,10 @@ public class UserService {
         this.repository = repository;
     }
 
+    public void setRepository(UserRepository repository) {
+        this.repository = repository;
+    }
+
     public User create(User user) {
         return repository.save(user);
     }
