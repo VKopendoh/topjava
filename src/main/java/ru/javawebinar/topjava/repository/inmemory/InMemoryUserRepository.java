@@ -6,8 +6,11 @@ import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.AbstractNamedEntity;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
+import ru.javawebinar.topjava.util.UsersUtil;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -15,8 +18,12 @@ import java.util.stream.Collectors;
 @Repository
 public class InMemoryUserRepository implements UserRepository {
     private static final Logger log = LoggerFactory.getLogger(InMemoryUserRepository.class);
-    private Map<Integer,User> repository = new ConcurrentSkipListMap<>();
+    private Map<Integer, User> repository = new ConcurrentSkipListMap<>();
     private AtomicInteger counter = new AtomicInteger(0);
+
+    {
+        UsersUtil.USERS.forEach(this::save);
+    }
 
     @Override
     public boolean delete(int id) {
@@ -27,12 +34,12 @@ public class InMemoryUserRepository implements UserRepository {
     @Override
     public User save(User user) {
         log.info("save {}", user);
-        if(user.isNew()){
+        if (user.isNew()) {
             user.setId(counter.incrementAndGet());
-            repository.put(user.getId(),user);
+            repository.put(user.getId(), user);
             return user;
         }
-        return repository.computeIfPresent(user.getId(),(id,oldUser)->user);
+        return repository.computeIfPresent(user.getId(), (id, oldUser) -> user);
     }
 
     @Override
@@ -44,7 +51,6 @@ public class InMemoryUserRepository implements UserRepository {
     @Override
     public List<User> getAll() {
         log.info("getAll");
-
         return repository.values().stream()
                 .sorted(Comparator.comparing(AbstractNamedEntity::getName))
                 .collect(Collectors.toList());
@@ -54,7 +60,7 @@ public class InMemoryUserRepository implements UserRepository {
     public User getByEmail(String email) {
         log.info("getByEmail {}", email);
         return repository.values().stream()
-                .filter(user -> Objects.equals(user.getName(), email))
+                .filter(user -> email.equals(user.getEmail()))
                 .findAny().orElse(null);
     }
 }
