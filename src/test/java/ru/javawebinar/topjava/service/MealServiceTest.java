@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
@@ -41,7 +42,7 @@ public class MealServiceTest {
     @Test
     public void get() {
         Meal meal = service.get(USER_MEAL_ID, USER_ID);
-        assertMatch(meal, USER_MEALS.get(0));
+        assertMatch(meal, USER_MEAL_ONE);
     }
 
     @Test(expected = NotFoundException.class)
@@ -52,7 +53,7 @@ public class MealServiceTest {
     @Test
     public void delete() {
         service.delete(ADMIN_MEAL_ID, ADMIN_ID);
-        assertMatch(service.getAll(ADMIN_ID), ADMIN_MEALS.get(1));
+        assertMatch(service.getAll(ADMIN_ID), ADMIN_MEAL_TWO);
     }
 
     @Test(expected = NotFoundException.class)
@@ -64,18 +65,19 @@ public class MealServiceTest {
     public void getBetweenDates() {
         List<Meal> meals = service
                 .getBetweenDates(LocalDate.of(2015, Month.MAY, 31), null, USER_ID);
-        assertMatch(meals, Arrays.asList(USER_MEALS.get(0), USER_MEALS.get(1), USER_MEALS.get(2)));
+        assertMatch(meals, Arrays.asList(USER_MEAL_ONE, USER_MEAL_TWO, USER_MEAL_THREE));
     }
 
     @Test
     public void getAll() {
-        List<Meal> all = service.getAll(USER_ID);
-        assertMatch(all, USER_MEALS);
+        List<Meal> all = service.getAll(ADMIN_ID);
+
+        assertMatch(all, Arrays.asList(ADMIN_MEAL_ONE, ADMIN_MEAL_TWO));
     }
 
     @Test
     public void update() {
-        Meal updated = new Meal(USER_MEALS.get(0));
+        Meal updated = new Meal(USER_MEAL_ONE);
         updated.setDescription("new breakfast");
         updated.setCalories(1500);
         service.update(updated, USER_ID);
@@ -87,11 +89,18 @@ public class MealServiceTest {
         service.update(service.get(USER_MEAL_ID, USER_ID), ADMIN_ID);
     }
 
+    @Test(expected = DuplicateKeyException.class)
+    public void updateDuplicateMeal() throws Exception {
+        Meal duplicate = new Meal(LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Dinner", 1510);
+        service.create(duplicate, USER_ID);
+    }
+
     @Test
     public void create() {
         Meal newMeal = new Meal(LocalDateTime.now(), "branch", 1000);
         Meal created = service.create(newMeal, ADMIN_ID);
         newMeal.setId(created.getId());
-        assertMatch(service.getAll(ADMIN_ID), newMeal, ADMIN_MEALS.get(0), ADMIN_MEALS.get(1));
+        assertMatch(service.getAll(ADMIN_ID), newMeal, ADMIN_MEAL_ONE, ADMIN_MEAL_TWO);
     }
+
 }
