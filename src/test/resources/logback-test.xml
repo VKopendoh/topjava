@@ -3,14 +3,21 @@
     <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
         <resetJUL>true</resetJUL>
     </contextListener>
-
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <charset>UTF-8</charset>
             <pattern>%d{HH:mm:ss.SSS} %-5level %class{50}.%M:%L - %msg%n</pattern>
         </encoder>
     </appender>
-
+    <appender name="tests" class="ch.qos.logback.core.ConsoleAppender">
+        <withJansi>true</withJansi>
+        <encoder>
+            <pattern>%green(%message)</pattern>
+        </encoder>
+    </appender>
+    <logger name="ru.javawebinar.topjava.service.MealServiceTest">
+        <appender-ref ref="tests"/>
+    </logger>
     <logger name="org.postgresql" level="debug"/>
     <logger name="org.springframework.jdbc" level="debug"/>
     <logger name="ru.javawebinar.topjava" level="debug"/>

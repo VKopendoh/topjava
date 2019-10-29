@@ -15,7 +15,6 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class JpaMealRepository implements MealRepository {
 
-
     @PersistenceContext
     private EntityManager em;
 
@@ -27,14 +26,13 @@ public class JpaMealRepository implements MealRepository {
         if (meal.isNew()) {
             em.persist(meal);
             return meal;
-        } else {
-            Meal mealRef = em.getReference(Meal.class, meal.getId());
-            if (mealRef.getUser().getId() != userId) {
-                return null;
-            }
+        } else if (get(meal.getId(), userId) != null) {
             return em.merge(meal);
+        } else {
+            return null;
         }
     }
+
 
     @Override
     @Transactional

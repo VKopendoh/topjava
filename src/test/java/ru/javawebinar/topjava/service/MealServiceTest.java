@@ -1,15 +1,12 @@
 package ru.javawebinar.topjava.service;
 
-import ch.qos.logback.classic.Logger;
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.ConsoleAppender;
+
 import org.junit.AfterClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -22,7 +19,6 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.Map;
 
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
@@ -35,7 +31,7 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 @RunWith(SpringJUnit4ClassRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
-    private static final Logger log = (Logger) LoggerFactory.getLogger(MealServiceTest.class);
+    private static final Logger log = LoggerFactory.getLogger(MealServiceTest.class);
 
     @Rule
     public final ExpectedException thrown = ExpectedException.none();
@@ -105,6 +101,12 @@ public class MealServiceTest {
     }
 
     @Test
+    public void updateNotExist() throws Exception {
+        thrown.expect(NotFoundException.class);
+        service.update(MEAL7, MEAL1_ID - 1000);
+    }
+
+    @Test
     public void getAll() throws Exception {
         assertMatch(service.getAll(USER_ID), MEALS);
     }
@@ -118,23 +120,7 @@ public class MealServiceTest {
 
     @AfterClass
     public static void showTestsResults() {
-        LoggerContext loggerContext = log.getLoggerContext();
-        loggerContext.reset();
+        log.debug(TestLogger.testInfo.toString());
 
-        PatternLayoutEncoder encoder = new PatternLayoutEncoder();
-        encoder.setContext(loggerContext);
-        encoder.setPattern("%green(%message) %n ");
-        encoder.start();
-
-        ConsoleAppender<ILoggingEvent> appender = new ConsoleAppender<ILoggingEvent>();
-        appender.setContext(loggerContext);
-        appender.setEncoder(encoder);
-        appender.start();
-
-        log.addAppender(appender);
-
-        for (Map.Entry<String, String> test : TestLogger.testInfo.entrySet()) {
-            log.debug("{} , {} ms", test.getKey(), test.getValue());
-        }
     }
 }
