@@ -2,11 +2,13 @@ package ru.javawebinar.topjava;
 
 import org.junit.rules.Stopwatch;
 import org.junit.runner.Description;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 
 public class TestLogger extends Stopwatch {
-    //private static final Logger log = LoggerFactory.getLogger(MealTestData.class);
+    private static final Logger log = LoggerFactory.getLogger(TestLogger.class);
 
     public static StringBuffer testInfo = new StringBuffer(String
             .format("%-20s| %s ms %n", "Test Name", "Execution Time"));
@@ -14,7 +16,7 @@ public class TestLogger extends Stopwatch {
     private static void logInfo(Description description, long nanos) {
         String testName = description.getMethodName();
         testInfo.append(String.format("%-20s| %s ms %n", testName, TimeUnit.NANOSECONDS.toMillis(nanos)));
-        //log.debug("{}: {} ms", testName, TimeUnit.NANOSECONDS.toMillis(nanos));
+        log.debug("{}: {} ms", testName, TimeUnit.NANOSECONDS.toMillis(nanos));
     }
 
     @Override
