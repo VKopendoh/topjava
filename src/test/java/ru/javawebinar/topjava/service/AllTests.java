@@ -5,12 +5,12 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        JdbcUserServiceTest.class,
+        /*JdbcUserServiceTest.class,
         JpaUserServiceTest.class,
         DataJpaUserServiceTest.class,
         JdbcMealServiceTest.class,
         JpaMealServiceTest.class,
-        DataJpaMealServiceTest.class
+        DataJpaMealServiceTest.class*/
 })
 
 public class AllTests {

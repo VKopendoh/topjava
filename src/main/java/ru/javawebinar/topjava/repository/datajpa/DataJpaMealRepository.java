@@ -1,5 +1,6 @@
 package ru.javawebinar.topjava.repository.datajpa;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
@@ -7,6 +8,7 @@ import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.DateTimeUtil;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -51,5 +53,14 @@ public class DataJpaMealRepository implements MealRepository {
                 .findAllByUserIdAndDateTimeGreaterThanAndDateTimeLessThanOrderByDateTimeDesc(userId,
                         DateTimeUtil.getStartInclusive(startDate),
                         DateTimeUtil.getEndExclusive(endDate));
+    }
+
+    @Override
+    @Transactional
+    public Meal getMealWithUser(int id, int userId) {
+        Meal meal = crudRepository.findByIdAndUserId(id, userId);
+        User user = (User) Hibernate.unproxy(meal.getUser());
+        meal.setUser(user);
+        return meal;
     }
 }
