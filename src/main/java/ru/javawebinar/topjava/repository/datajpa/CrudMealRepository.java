@@ -14,7 +14,7 @@ public interface CrudMealRepository extends JpaRepository<Meal, Integer> {
 
     Meal findByIdAndUserId(int id, int userId);
 
-    List<Meal> findAllByUserIdAndDateTimeGreaterThanAndDateTimeLessThanOrderByDateTimeDesc(int userid,
+    List<Meal> findAllByUserIdAndDateTimeGreaterThanEqualAndDateTimeLessThanOrderByDateTimeDesc(int userid,
                                                                                            LocalDateTime startDate,
                                                                                            LocalDateTime endDate);
 

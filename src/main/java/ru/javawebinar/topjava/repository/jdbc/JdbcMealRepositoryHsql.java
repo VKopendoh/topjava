@@ -20,8 +20,7 @@ public class JdbcMealRepositoryHsql extends JdbcAbstractMealRepository {
     }
 
     @Override
-    public <DT> DT setDateTime(LocalDateTime dateTime) {
-        Timestamp timestamp = Timestamp.valueOf(dateTime);
-        return (DT) timestamp;
+    public Timestamp setDateTime(LocalDateTime dateTime) {
+        return Timestamp.valueOf(dateTime);
     }
 }

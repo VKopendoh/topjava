@@ -19,7 +19,7 @@ import static ru.javawebinar.topjava.util.DateTimeUtil.getEndExclusive;
 import static ru.javawebinar.topjava.util.DateTimeUtil.getStartInclusive;
 
 
-public abstract class JdbcAbstractMealRepository implements MealRepository {
+public abstract class JdbcAbstractMealRepository<T> implements MealRepository {
 
     private static final RowMapper<Meal> ROW_MAPPER = BeanPropertyRowMapper.newInstance(Meal.class);
 
@@ -87,5 +87,5 @@ public abstract class JdbcAbstractMealRepository implements MealRepository {
                 ROW_MAPPER, userId, setDateTime(getStartInclusive(startDate)), setDateTime(getEndExclusive(endDate)));
     }
 
-    public abstract <DT> DT setDateTime(LocalDateTime dateTime);
+    public abstract T setDateTime(LocalDateTime dateTime);
 }

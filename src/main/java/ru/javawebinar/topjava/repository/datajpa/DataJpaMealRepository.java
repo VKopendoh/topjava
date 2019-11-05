@@ -22,6 +22,7 @@ public class DataJpaMealRepository implements MealRepository {
     private CrudUserRepository crudUserRepository;
 
     @Override
+    @Transactional
     public Meal save(Meal meal, int userId) {
         User user = crudUserRepository.getOne(userId);
         if (!meal.isNew() && get(meal.getId(), userId) == null) {
@@ -50,7 +51,7 @@ public class DataJpaMealRepository implements MealRepository {
     @Override
     public List<Meal> getBetweenInclusive(LocalDate startDate, LocalDate endDate, int userId) {
         return crudRepository
-                .findAllByUserIdAndDateTimeGreaterThanAndDateTimeLessThanOrderByDateTimeDesc(userId,
+                .findAllByUserIdAndDateTimeGreaterThanEqualAndDateTimeLessThanOrderByDateTimeDesc(userId,
                         DateTimeUtil.getStartInclusive(startDate),
                         DateTimeUtil.getEndExclusive(endDate));
     }
