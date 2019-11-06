@@ -12,12 +12,16 @@ public class LoggerUtils extends Stopwatch {
 
     private static final Logger log = getLogger("result");
 
-    private static StringBuilder results = new StringBuilder();
+    private static StringBuilder results;// = new StringBuilder();
 
     private static void logInfo(Description description, long nanos) {
         String result = String.format("\n%-25s %7d", description.getMethodName(), TimeUnit.NANOSECONDS.toMillis(nanos));
         results.append(result);
         log.info(result + " ms\n");
+    }
+
+    public static void clearResults() {
+        results = new StringBuilder();
     }
 
     @Override
