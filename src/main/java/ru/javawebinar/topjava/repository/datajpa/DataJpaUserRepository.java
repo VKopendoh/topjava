@@ -4,13 +4,15 @@ import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 
-import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
+@Transactional(readOnly = true)
 public class DataJpaUserRepository implements UserRepository {
     private static final Sort SORT_NAME_EMAIL = Sort.by(Sort.Direction.ASC, "name", "email");
 
@@ -18,11 +20,13 @@ public class DataJpaUserRepository implements UserRepository {
     private CrudUserRepository crudRepository;
 
     @Override
+    @Transactional
     public User save(User user) {
         return crudRepository.save(user);
     }
 
     @Override
+    @Transactional
     public boolean delete(int id) {
         return crudRepository.delete(id) != 0;
     }
@@ -43,13 +47,9 @@ public class DataJpaUserRepository implements UserRepository {
     }
 
     @Override
-    @Transactional
     public User getWithMeals(int id) {
-        User user = crudRepository.findById(id).orElse(null);
-        if (user == null) {
-            return null;
-        }
-        Hibernate.initialize(user.getMeals());
-        return user;
+        Optional<User> user = crudRepository.findById(id);
+        user.ifPresent(u -> Hibernate.initialize(u.getMeals()));
+        return user.orElseGet(null);
     }
 }
