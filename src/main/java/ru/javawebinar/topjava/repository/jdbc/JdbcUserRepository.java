@@ -24,10 +24,6 @@ import java.util.Map;
 @Transactional(readOnly = true)
 public class JdbcUserRepository implements UserRepository {
 
-    private static final String GET_ALL_USERS = "SELECT u.*,ur.role AS role FROM users u JOIN user_roles ur ON u.id = ur.user_id ORDER BY name,email";
-    String s = "SELECT CUS.*, BRANDS.CUSTOMER_BRAND_ID COL_A, BRANDS.BRAND_NAME COL_B, 1 IS_BRAND FROM TBL_CUSTOMER CUS JOIN TBL_CUSTOMER_BRANDS BRANDS ON (CUS.CUSTOMER_ID = BRANDS.CUSTOMER_ID)\n" +
-            "UNION ALL\n" +
-            "SELECT CUS.*, ORDERS.ORDER_ID, '', 0 IS_BRAND FROM TBL_CUSTOMER CUS JOIN TBL_ORDERS ORDERS ON (CUS.CUSTOMER_ID = ORDERS.CUSTOMER_ID)";
     private static final BeanPropertyRowMapper<User> ROW_MAPPER = BeanPropertyRowMapper.newInstance(User.class);
 
     private final JdbcTemplate jdbcTemplate;
@@ -107,7 +103,8 @@ public class JdbcUserRepository implements UserRepository {
 
     @Override
     public List<User> getAll() {
-        Map<Integer, User> map = jdbcTemplate.query(GET_ALL_USERS, usersExtractor);
+        Map<Integer, User> map = jdbcTemplate.query("SELECT u.*,ur.role AS role FROM users u " +
+                "JOIN user_roles ur ON u.id = ur.user_id ORDER BY name,email", usersExtractor);
         return new ArrayList<>(map.values());
     }
 }
