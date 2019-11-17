@@ -8,15 +8,11 @@
 <jsp:include page="fragments/bodyHeader.jsp"/>
 <section>
     <hr>
-    <c:choose>
-        <c:when test="${param.id == null}">
-            <h2><spring:message code="meal.create"/></h2>
-        </c:when>
-        <c:otherwise>
-            <h2><spring:message code="meal.edit"/></h2>
-        </c:otherwise>
-    </c:choose>
-
+    <h2>
+        <spring:message var="msgCreate" code="meal.create"/>
+        <spring:message var="msgEdit" code="meal.edit"/>
+        <c:out value="${param.id == null ? msgCreate : msgEdit}"/>
+    </h2>
     <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.Meal" scope="request"/>
     <form method="post">
         <input type="hidden" name="id" value="${meal.id}">

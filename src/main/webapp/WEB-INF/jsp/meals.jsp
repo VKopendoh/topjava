@@ -11,7 +11,7 @@
 <section>
     <hr>
     <h2><spring:message code="meal.title"/></h2>
-    <form method="get">
+    <form method="post">
         <dl>
             <dt><spring:message code="meal.fromDate"/></dt>
             <dd><input type="date" name="startDate" value="${param.startDate}"></dd>

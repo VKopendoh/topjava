@@ -24,7 +24,7 @@ import java.util.Map;
 @Transactional(readOnly = true)
 public class JdbcUserRepository implements UserRepository {
 
-    private static final BeanPropertyRowMapper<User> ROW_MAPPER = BeanPropertyRowMapper.newInstance(User.class);
+    public static final BeanPropertyRowMapper<User> ROW_MAPPER = BeanPropertyRowMapper.newInstance(User.class);
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -70,11 +70,15 @@ public class JdbcUserRepository implements UserRepository {
             Number newKey = insertUser.executeAndReturnKey(parameterSource);
             user.setId(newKey.intValue());
             batchInsertRoles(List.of(user.getRoles().toArray(Role[]::new)), newKey.intValue());
-        } else if (namedParameterJdbcTemplate.update(
-                "UPDATE users SET name=:name, email=:email, password=:password, " +
-                        "registered=:registered, enabled=:enabled, calories_per_day=:caloriesPerDay " +
-                        "WHERE id=:id", parameterSource) == 0) {
-            return null;
+        } else {
+            if (namedParameterJdbcTemplate.update(
+                    "UPDATE users SET name=:name, email=:email, password=:password, " +
+                            "registered=:registered, enabled=:enabled, calories_per_day=:caloriesPerDay " +
+                            "WHERE id=:id", parameterSource) == 0) {
+                return null;
+            }
+            jdbcTemplate.update("DELETE FROM user_roles WHERE user_id=?", user.getId());
+            batchInsertRoles(List.of(user.getRoles().toArray(Role[]::new)), user.getId());
         }
         return user;
     }
@@ -104,7 +108,7 @@ public class JdbcUserRepository implements UserRepository {
     @Override
     public List<User> getAll() {
         Map<Integer, User> map = jdbcTemplate.query("SELECT u.*,ur.role AS role FROM users u " +
-                "JOIN user_roles ur ON u.id = ur.user_id ORDER BY name,email", usersExtractor);
+                " JOIN user_roles ur ON u.id = ur.user_id ORDER BY name,email", usersExtractor);
         return new ArrayList<>(map.values());
     }
 }

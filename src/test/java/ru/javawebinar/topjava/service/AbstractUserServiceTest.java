@@ -1,58 +1,20 @@
 package ru.javawebinar.topjava.service;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.CacheManager;
-import org.springframework.core.env.Environment;
-import org.springframework.core.env.Profiles;
 import org.springframework.dao.DataAccessException;
-import org.springframework.test.annotation.IfProfileValue;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
-import ru.javawebinar.topjava.repository.JpaUtil;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
-import javax.validation.ConstraintViolationException;
-import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
-import static ru.javawebinar.topjava.Profiles.JDBC;
-import static ru.javawebinar.topjava.Profiles.JPA;
 import static ru.javawebinar.topjava.UserTestData.*;
 
 public abstract class AbstractUserServiceTest extends AbstractServiceTest {
 
     @Autowired
     protected UserService service;
-
-    @Autowired
-    protected CacheManager cacheManager;
-
-    @Autowired(required = false)
-    private JpaUtil jpaUtil;
-
-    @Autowired
-    protected Environment environment;
-
-    @Before
-    public void setUp() throws Exception {
-        cacheManager.getCache("users").clear();
-        if (!useJdbcProfile()) {
-            jpaUtil.clear2ndLevelHibernateCache();
-        }
-    }
-
-    private boolean useJdbcProfile() {
-        System.setProperty("spring.profiles.active", JPA);
-        if (environment.acceptsProfiles(Profiles.of(JDBC))) {
-            System.setProperty("spring.profiles.active", JDBC);
-            return true;
-        } else {
-            return false;
-        }
-    }
 
     @Test
     public void create() throws Exception {
@@ -71,8 +33,8 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
 
     @Test(expected = NotFoundException.class)
     public void delete() throws Exception {
-        service.delete(USER_ID);
-        service.get(USER_ID);
+        service.delete(ADMIN_ID);
+        service.get(ADMIN_ID);
     }
 
     @Test(expected = NotFoundException.class)
@@ -82,8 +44,8 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
 
     @Test
     public void get() throws Exception {
-        User user = service.get(USER_ID);
-        assertMatch(user, USER);
+        User user = service.get(ADMIN_ID);
+        assertMatch(user, ADMIN);
     }
 
     @Test(expected = NotFoundException.class)
@@ -108,16 +70,5 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     public void getAll() throws Exception {
         List<User> all = service.getAll();
         assertMatch(all, ADMIN, USER);
-    }
-
-    @Test
-    @IfProfileValue(name = "spring.profiles.active", values = {JPA})
-    public void createWithException() throws Exception {
-        //Assume.assumeTrue(!useJdbcProfile());
-        validateRootCause(() -> service.create(new User(null, "  ", "mail@yandex.ru", "password", Role.ROLE_USER)), ConstraintViolationException.class);
-        validateRootCause(() -> service.create(new User(null, "User", "  ", "password", Role.ROLE_USER)), ConstraintViolationException.class);
-        validateRootCause(() -> service.create(new User(null, "User", "mail@yandex.ru", "  ", Role.ROLE_USER)), ConstraintViolationException.class);
-        validateRootCause(() -> service.create(new User(null, "User", "mail@yandex.ru", "password", 9, true, new Date(), Set.of())), ConstraintViolationException.class);
-        validateRootCause(() -> service.create(new User(null, "User", "mail@yandex.ru", "password", 10001, true, new Date(), Set.of())), ConstraintViolationException.class);
     }
 }
