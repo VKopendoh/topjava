@@ -24,7 +24,7 @@ import java.util.Map;
 @Transactional(readOnly = true)
 public class JdbcUserRepository implements UserRepository {
 
-    public static final BeanPropertyRowMapper<User> ROW_MAPPER = BeanPropertyRowMapper.newInstance(User.class);
+    private static final BeanPropertyRowMapper<User> ROW_MAPPER = BeanPropertyRowMapper.newInstance(User.class);
 
     private final JdbcTemplate jdbcTemplate;
 
