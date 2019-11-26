@@ -20,7 +20,7 @@
     <logger name="result" level="INFO" additivity="false">
         <appender-ref ref="result"/>
     </logger>
-
+    <logger name="org.springframework.web" level="debug"/>
     <!--<logger name="org.postgresql" level="debug"/>-->
     <!--<logger name="org.springframework.jdbc" level="debug"/>-->
 

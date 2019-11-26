@@ -59,7 +59,6 @@ class AdminRestControllerTest extends AbstractControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
-
         assertMatch(userService.get(USER_ID), updated);
     }
 
