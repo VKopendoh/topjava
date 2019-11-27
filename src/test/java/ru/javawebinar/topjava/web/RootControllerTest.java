@@ -2,19 +2,17 @@ package ru.javawebinar.topjava.web;
 
 import org.assertj.core.matcher.AssertionMatcher;
 import org.junit.jupiter.api.Test;
-import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.User;
+import ru.javawebinar.topjava.to.MealTo;
 
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static ru.javawebinar.topjava.MealTestData.MEALS;
-import static ru.javawebinar.topjava.MealTestData.assertMatch;
-import static ru.javawebinar.topjava.UserTestData.ADMIN;
-import static ru.javawebinar.topjava.UserTestData.USER;
-import static ru.javawebinar.topjava.UserTestData.assertMatch;
+import static ru.javawebinar.topjava.MealTestData.MEAL_TOS;
+import static ru.javawebinar.topjava.MealTestData.assertMatchTos;
+import static ru.javawebinar.topjava.UserTestData.*;
 
 class RootControllerTest extends AbstractControllerTest {
 
@@ -42,10 +40,10 @@ class RootControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("meals"))
                 .andExpect(forwardedUrl("/WEB-INF/jsp/meals.jsp"))
-                .andExpect(model().attribute("meals", new AssertionMatcher<List<Meal>>() {
+                .andExpect(model().attribute("meals", new AssertionMatcher<List<MealTo>>() {
                     @Override
-                    public void assertion(List<Meal> actual) throws AssertionError {
-                        assertMatch(actual,MEALS);
+                    public void assertion(List<MealTo> actual) throws AssertionError {
+                        assertMatchTos(actual, MEAL_TOS);
                     }
                 }));
     }

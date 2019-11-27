@@ -9,6 +9,7 @@ import ru.javawebinar.topjava.MealTestData;
 import ru.javawebinar.topjava.TestUtil;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
+import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 import ru.javawebinar.topjava.web.AbstractControllerTest;
 import ru.javawebinar.topjava.web.json.JsonUtil;
@@ -32,7 +33,7 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(contentJson(MEALS.toArray(Meal[]::new)));
+                .andExpect(contentJson(MEAL_TOS.toArray(MealTo[]::new)));
     }
 
     @Test
@@ -42,7 +43,7 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(contentJson(MEAL7, MEAL6));
+                .andExpect(contentJson(MEAL_TOS.get(0), MEAL_TOS.get(1)));
     }
 
     @Test
