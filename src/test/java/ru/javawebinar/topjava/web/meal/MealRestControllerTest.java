@@ -9,10 +9,12 @@ import ru.javawebinar.topjava.MealTestData;
 import ru.javawebinar.topjava.TestUtil;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
-import ru.javawebinar.topjava.to.MealTo;
+import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 import ru.javawebinar.topjava.web.AbstractControllerTest;
 import ru.javawebinar.topjava.web.json.JsonUtil;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -33,17 +35,18 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(contentJson(MEAL_TOS.toArray(MealTo[]::new)));
+                .andExpect(contentJson(MEAL_TOS));
     }
 
     @Test
     void filter() throws Exception {
-        final String FILTER = "filter?startDateTime=2015-05-31T13:00:00&endDateTime=2015-05-31T20:00:00";
+        final String FILTER = "filter?startDateTime=2015-05-31T10:00:00&endDateTime=2015-05-31T20:00:00";
         mockMvc.perform(MockMvcRequestBuilders.get(REST_URL + FILTER))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(contentJson(MEAL_TOS.get(0), MEAL_TOS.get(1)));
+                .andExpect(contentJson(MealsUtil.getTos(List.of(MEAL7, MEAL6, MEAL5),
+                        MealsUtil.DEFAULT_CALORIES_PER_DAY)));
     }
 
     @Test
