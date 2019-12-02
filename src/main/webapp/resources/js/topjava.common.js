@@ -3,11 +3,11 @@ var context, form;
 function makeEditable(ctx) {
     context = ctx;
     form = $('#detailsForm');
-    $(".delete").click(function () {
+    /*$(".delete").click(function () {
         if (confirm('Are you sure?')) {
             deleteRow($(this).attr("id"));
         }
-    });
+    });*/
 
     $(document).ajaxError(function (event, jqXHR, options, jsExc) {
         failNoty(jqXHR);
@@ -33,7 +33,8 @@ function deleteRow(id) {
 }
 
 function updateTable() {
-    $.get(context.ajaxUrl, function (data) {
+    var params = "filter?" + JSON.stringify($("#filter").serialize()).replace(/\"/g, "");
+    $.get(context.ajaxUrl + params, function (data) {
         context.datatableApi.clear().rows.add(data).draw();
     });
 }

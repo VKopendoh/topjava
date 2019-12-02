@@ -1,5 +1,5 @@
 dl {
-    background: none repeat scroll 0 0 #FAFAFA;
+    background: none repeat scroll 0 0;
     margin: 8px 0;
     padding: 0;
 }
@@ -32,9 +32,11 @@ html {
     position: relative;
     min-height: 100%;
 }
+
 body {
     margin-bottom: 60px; /* Margin bottom by footer height */
 }
+
 .footer {
     position: absolute;
     bottom: 0;
