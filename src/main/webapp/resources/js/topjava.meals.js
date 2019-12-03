@@ -27,7 +27,7 @@ $(function () {
                 "order": [
                     [
                         0,
-                        "asc"
+                        "dsc"
                     ]
                 ]
             })
@@ -35,3 +35,19 @@ $(function () {
     );
 });
 
+function getParams(url) {
+    var params = "";
+    if (url.includes("meals")) {
+        params = "filter?" + JSON.stringify($("#filter").serialize()).replace(/\"/g, "");
+    }
+    return params;
+}
+
+function resetFilter() {
+    $(':input','#filter')
+     .not(':button, :submit, :reset, :hidden')
+        .val('')
+        .prop('checked', false)
+        .prop('selected', false);
+    updateTable();
+}

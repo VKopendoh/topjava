@@ -1,13 +1,23 @@
-var context, form;
+var context, form, check;
 
 function makeEditable(ctx) {
     context = ctx;
     form = $('#detailsForm');
-    /*$(".delete").click(function () {
-        if (confirm('Are you sure?')) {
-            deleteRow($(this).attr("id"));
+    /* $(".delete").click(function () {
+         if (confirm('Are you sure?')) {
+             deleteRow($(this).attr("id"));
+         }
+     });*/
+
+    $(".checkbox").click(function(){
+        var id = event.target.id;
+        if($(this).is(":checked")){
+            setEnable(id);
         }
-    });*/
+        else if($(this).is(":not(:checked)")){
+            setDisable(id);
+        }
+    });
 
     $(document).ajaxError(function (event, jqXHR, options, jsExc) {
         failNoty(jqXHR);
@@ -23,17 +33,40 @@ function add() {
 }
 
 function deleteRow(id) {
+    if (confirm('Are you sure?')) {
+        $.ajax({
+            url: context.ajaxUrl + id,
+            type: "DELETE"
+        }).done(function () {
+            updateTable();
+            successNoty("Deleted");
+        });
+    }
+}
+
+function setEnable(id) {
     $.ajax({
-        url: context.ajaxUrl + id,
-        type: "DELETE"
+        type: "PUT",
+        url: context.ajaxUrl +"enable/" + id
     }).done(function () {
-        updateTable();
-        successNoty("Deleted");
+        successNoty("Enabled");
+    });
+}
+
+function setDisable(id) {
+    $.ajax({
+        type: "PUT",
+        url: context.ajaxUrl +"disable/" + id
+    }).done(function () {
+        successNoty("Disabled");
     });
 }
 
 function updateTable() {
-    var params = "filter?" + JSON.stringify($("#filter").serialize()).replace(/\"/g, "");
+    var params = "";
+    if (this.context.ajaxUrl.includes("meals")) {
+        params = "filter?" + JSON.stringify($("#filter").serialize()).replace(/\"/g, "");
+    }
     $.get(context.ajaxUrl + params, function (data) {
         context.datatableApi.clear().rows.add(data).draw();
     });
