@@ -20,7 +20,6 @@ public class MealTo extends BaseTo {
     private String description;
 
     @Range(min = 10, max = 10000)
-    @NotNull
     private int calories;
 
     private boolean excess;

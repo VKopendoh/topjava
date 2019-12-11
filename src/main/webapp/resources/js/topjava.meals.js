@@ -76,16 +76,10 @@ $(function () {
                 ]
             ],
             "createdRow": function (row, data, dataIndex) {
-                if (data.excess === true) {
-                    $(row).attr("data-mealExcess", true);
-                } else {
-                    $(row).attr("data-mealExcess", false);
-                }
+                $(row).attr("data-mealExcess", data.excess);
             }
 
         }),
-        updateTable: function () {
-            $.get(mealAjaxUrl, updateFilteredTable);
-        }
+        updateTable: updateFilteredTable
     });
 });

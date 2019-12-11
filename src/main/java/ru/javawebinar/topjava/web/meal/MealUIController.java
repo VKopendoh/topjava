@@ -39,14 +39,14 @@ public class MealUIController extends AbstractMealController {
     }
 
     @PostMapping
-    protected ResponseEntity<String> createOrUpdate(@Valid MealTo mealTo, BindingResult result) {
+    protected ResponseEntity<String> createOrUpdate(@Valid Meal meal, BindingResult result) {
         if (result.hasErrors()) {
             return checkInputData(result);
         }
-        if (mealTo.isNew()) {
-            super.create(mealTo);
+        if (meal.isNew()) {
+            super.create(meal);
         } else {
-            super.update(mealTo, mealTo.id());
+            super.update(meal, meal.id());
         }
         return ResponseEntity.ok().build();
     }
