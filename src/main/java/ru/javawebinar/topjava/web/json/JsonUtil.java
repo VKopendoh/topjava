@@ -43,4 +43,12 @@ public class JsonUtil {
             throw new IllegalStateException("Invalid write to JSON:\n'" + obj + "'", e);
         }
     }
+
+    public static <T> String writeValue(T obj, ObjectWriter ow) {
+        try {
+            return ow.writeValueAsString(obj);
+        } catch (JsonProcessingException e) {
+            throw new IllegalStateException("Invalid write to JSON:\n'" + obj + "'", e);
+        }
+    }
 }
