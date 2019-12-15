@@ -40,4 +40,3 @@ public class DateTimeUtil {
         return localDate != null ? localDate.plus(1, ChronoUnit.DAYS).atStartOfDay() : MAX_DATE;
     }
 }
-

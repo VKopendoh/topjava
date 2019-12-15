@@ -67,7 +67,6 @@
     <c:if test="${not empty param.username}">
     setCredentials("${param.username}", "");
     </c:if>
-
     function login(username, password) {
         setCredentials(username, password);
         $("#login_form").submit();
