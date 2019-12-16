@@ -41,7 +41,6 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .andExpect(result -> MEAL_MATCHERS.assertMatch(readFromJsonMvcResult(result, Meal.class), ADMIN_MEAL1));
     }
 
-
     @Test
     void getUnauth() throws Exception {
         perform(doGet(MEAL1_ID))
@@ -114,4 +113,12 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(MEAL_TO_MATCHERS.contentJson(getTos(MEALS, USER.getCaloriesPerDay())));
     }
+
+    @Test
+    void notValidData() throws Exception {
+        Meal newNotValid = MealTestData.getNewNotValid();
+        perform(doPost().jsonBody(newNotValid).basicAuth(USER))
+                .andExpect(status().is4xxClientError());
+    }
+
 }

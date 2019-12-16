@@ -29,6 +29,11 @@ public class MealTestData {
         return new Meal(null, of(2015, Month.JUNE, 1, 18, 0), "Созданный ужин", 300);
     }
 
+    public static Meal getNewNotValid() {
+        return new Meal(null, of(2015, Month.MAY, 30, 10, 0),
+                "Ужин с не валидным значением калорий", 1);
+    }
+
     public static Meal getUpdated() {
         return new Meal(MEAL1_ID, MEAL1.getDateTime(), "Обновленный завтрак", 200);
     }
